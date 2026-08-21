@@ -109,7 +109,7 @@ app.delete('/produtos/:id', (req, res) => {
         res.status(204)
         produtos.splice(index, 1)
         res.json(produtos)
-        res.send("Produto deletado!")
+        console.log("Produto deletado!")
     } else {
         res.status(404)
         res.send("Produto não encontrado!")
