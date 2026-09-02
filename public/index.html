@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produtos</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script defer src="js/app.js"></script>
+</head>
+<body>
+    <h1>Cadastro de Produtos</h1>
+    <form id="formProduto">
+        <p>id</p>
+        <input type="number" id="id" disabled>
+
+        <p>Descrição: </p>
+        <input type="text" id="descricao" required>
+
+        <p>Preço: </p>
+        <input type="number" id="preco" step="0.01" required>
+
+        <p>Categoria: </p>
+        <input type="text" id="categoria" required>
+
+        <p>Estoque: </p>
+        <input type="number" id="estoque" required>
+
+        <button id="btnSalvar">Salvar</button>
+        <button id="btnEditar">Editar</button>
+        <button id="btnExcluir">Excluir</button>
+    </form>
+
+    <h2>Produtos</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Descrição</th>
+                <th>Preço</th>
+                <th>Categoria</th>
+                <th>Estoque</th>
+            </tr>
+        </thead>
+
+        <tbody id="listaProdutos">
+
+        </tbody>
+    </table>
+</body>
+</html>

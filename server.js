@@ -1,5 +1,6 @@
-const express = require('express')
-const app = express()
+const express = require('express') 
+const app = express() 
+app.use(express.static("public"))
 
 app.use(express.json())
 
@@ -68,11 +69,14 @@ app.post('/produtos', (req, res) => {
         id: maiorId + 1,
         ...req.body
     }
-
+    console.log("Created")
 
     produtos.push(produto)
-    res.status(201)
-    console.log("Created")
+    res.status(201).json({
+        mensagem: "Produto cadastrado com sucesso!",
+        produto: produto
+    });
+    
     res.json(produto)
 
 })
@@ -90,11 +94,13 @@ app.put('/produtos/:id', (req, res) => {
             ...req.body
         }
 
-        res.json(produtos[index])
+        res.json({
+            mensagem: "Produto alterado com sucesso!",
+            produto: produtos[index]
+        });
 
     } else {
-        res.status(404)
-        res.send("Produto não encontrado!")
+        res.status(404).send("Produto não encontrado!")
     }
 })
 
@@ -106,24 +112,24 @@ app.delete('/produtos/:id', (req, res) => {
 
 
     if (index != -1) {
-        res.status(204)
+       
         produtos.splice(index, 1)
-        res.json(produtos)
-        console.log("Produto deletado!")
+        res.status(204).json({
+            mensagem: "Produto deletado com sucesso!"
+        });
     } else {
-        res.status(404)
-        res.send("Produto não encontrado!")
+        res.status(404).send("Produto não encontrado!")
     }
 })
+
+app.listen(3000, (e) => {
+    console.log('Servidor ouvindo em http://localhost:3000')
+})
+
+/* 
 
 app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
     console.log('Servidor funcionando')
 })
-
-
-/* 
-
-    app.listen(3000, (e) => {
-    console.log('Servidor ouvindo em http://localhost:3000')
-})
+    
 */
