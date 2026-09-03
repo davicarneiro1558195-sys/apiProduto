@@ -1,12 +1,11 @@
 const lista = document.getElementById("listaProdutos");
 const form = document.getElementById("formProduto");
-const btnSalvar = document.getElementById("btnSalvar");
+const btnAdicionar = document.getElementById("btnAdicionar");
 const btnEditar = document.getElementById("btnEditar");
 const btnExcluir = document.getElementById("btnExcluir");
-const link = "http://localhost:3000"
 
 async function listarProdutos() {
-    const resposta = await fetch(`${link}/produtos`)
+    const resposta = await fetch("/produtos")
 
     const produtos = await resposta.json()
 
@@ -32,7 +31,7 @@ async function listarProdutos() {
 }
 
 async function carregarProduto(id) {
-    const resposta = await fetch(`${link}/produtos/${id}`)
+    const resposta = await fetch(`/produtos/${id}`)
 
     const produto = await resposta.json()
 
@@ -47,43 +46,51 @@ async function carregarProduto(id) {
     document.getElementById("estoque").value = produto.estoque;
 }
 
-async function salvarProduto() {
+async function adicionarProduto() {
 
-    const id = Number(document.getElementById("id").value);
+    const id = document.getElementById("id").value;
 
-    const respostaId = await fetch(`${link}/produtos/${id}`);
-
-    if (respostaId.ok) {
-        alert("Esse ID já existe!");
+    if (!form.checkValidity()) {
+        alert("Preencha o formulário corretamente.") 
     } else {
-        const produto = {
-            descricao: document.getElementById("descricao").value,
-            preco: Number(document.getElementById("preco").value),
-            categoria: document.getElementById("categoria").value,
-            estoque: Number(document.getElementById("estoque").value)
-        };
 
-        const resposta = await fetch(`${link}/produtos`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(produto)
-        });
+        const respostaId = await fetch(`/produtos/${Number(id)}`);
 
-        const dados = await resposta.json();
+        if (respostaId.ok) {
+            alert("Esse ID já existe!");
+        } else {
 
-        alert(dados.mensagem);
+            const produto = {
+                descricao: document.getElementById("descricao").value,
+                preco: Number(document.getElementById("preco").value),
+                categoria: document.getElementById("categoria").value,
+                estoque: Number(document.getElementById("estoque").value)
+            };
 
-        form.reset();
-        listarProdutos()
+            const resposta = await fetch("/produtos", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(produto)
+            });
+
+            const dados = await resposta.json();
+
+            alert(dados.mensagem);
+
+            form.reset();
+            listarProdutos();
+        }
     }
-
-
 }
 
 async function editarProduto(id) {
-    const produto = {
+
+    if (!form.checkValidity()) {
+        alert("Preencha o formulário corretamente.") 
+    }else{
+        const produto = {
         descricao: document.getElementById("descricao").value,
         preco: Number(document.getElementById("preco").value),
         categoria: document.getElementById("categoria").value,
@@ -91,7 +98,7 @@ async function editarProduto(id) {
 
     }
 
-    const resposta = await fetch(`${link}/produtos/${id}`, {
+    const resposta = await fetch(`/produtos/${id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"
@@ -105,11 +112,17 @@ async function editarProduto(id) {
 
     form.reset()
     listarProdutos()
+    }
+    
 
 }
 
 async function excluirProduto(id) {
-    const resposta = await fetch(`${link}/produtos/${id}`, {
+
+    if (!form.checkValidity()) {
+        alert("Preencha o formulário corretamente.") 
+    }else{
+        const resposta = await fetch(`/produtos/${id}`, {
         method: "DELETE"
     });
 
@@ -119,13 +132,11 @@ async function excluirProduto(id) {
 
     form.reset();
     listarProdutos();
+    }
 }
 
-btnSalvar.addEventListener("click", () => {
-
-    const id = document.getElementById("id").value
-
-    salvarProduto()
+btnAdicionar.addEventListener("click", () => {
+    adicionarProduto()
 
 })
 

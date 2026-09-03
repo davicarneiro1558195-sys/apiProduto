@@ -76,8 +76,6 @@ app.post('/produtos', (req, res) => {
         mensagem: "Produto cadastrado com sucesso!",
         produto: produto
     });
-    
-    res.json(produto)
 
 })
 
@@ -114,7 +112,7 @@ app.delete('/produtos/:id', (req, res) => {
     if (index != -1) {
        
         produtos.splice(index, 1)
-        res.status(204).json({
+        res.status(200).json({
             mensagem: "Produto deletado com sucesso!"
         });
     } else {
@@ -122,14 +120,15 @@ app.delete('/produtos/:id', (req, res) => {
     }
 })
 
-app.listen(3000, (e) => {
-    console.log('Servidor ouvindo em http://localhost:3000')
+app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
+    console.log('Servidor funcionando')
 })
 
 /* 
 
-app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
-    console.log('Servidor funcionando')
+
+    app.listen(3000, (e) => {
+    console.log('Servidor ouvindo em http://localhost:3000')
 })
     
 */
