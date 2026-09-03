@@ -52,6 +52,8 @@ async function adicionarProduto() {
 
     if (!form.checkValidity()) {
         alert("Preencha o formulário corretamente.") 
+        form.reset();
+
     } else {
 
         const respostaId = await fetch(`/produtos/${Number(id)}`);
