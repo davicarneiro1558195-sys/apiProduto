@@ -42,6 +42,30 @@ const produtos = [
     }
 ]
 
+const login = [
+    {
+        "usuario": "admin",
+        "senha": "admin123"
+    },
+    {
+        "usuario": "joao",
+        "senha": "joao456"
+    },
+    {
+        "usuario": "maria",
+        "senha": "maria789"
+    },
+    {
+        "usuario": "pedro",
+        "senha": "pedro321"
+    },
+    {
+        "usuario": "ana",
+        "senha": "ana654"
+    }
+]
+
+
 app.get('/produtos', (req, res) => {
     res.send(produtos)
 })
@@ -122,6 +146,10 @@ app.delete('/produtos/:id', (req, res) => {
 
 app.listen(3000, (e) => {
     console.log('Servidor ouvindo em http://localhost:3000')
+})
+
+app.get('/login', (req, res) => {
+    res.send(login)
 })
 
 /* 
