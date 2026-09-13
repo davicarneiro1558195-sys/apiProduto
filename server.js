@@ -1,8 +1,12 @@
-const express = require('express') 
-const app = express() 
-app.use(express.static("public"))
+const express = require('express')
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
+const JWT_SECRET = "Lavalle";
+const app = express();
 
-app.use(express.json())
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.static("public"))
 
 const produtos = [
     {
@@ -42,28 +46,20 @@ const produtos = [
     }
 ]
 
-const login = [
+const usuarios = [
     {
-        "usuario": "admin",
-        "senha": "admin123"
+        id: 1,
+        nome: "Ana Silva",
+        login: "ana",
+        senha: "123"
     },
     {
-        "usuario": "joao",
-        "senha": "joao456"
-    },
-    {
-        "usuario": "maria",
-        "senha": "maria789"
-    },
-    {
-        "usuario": "pedro",
-        "senha": "pedro321"
-    },
-    {
-        "usuario": "ana",
-        "senha": "ana654"
+        id: 2,
+        nome: "Carlos Souza",
+        login: "carlos",
+        senha: "456"
     }
-]
+];
 
 
 app.get('/produtos', (req, res) => {
@@ -100,7 +96,7 @@ app.post('/produtos', (req, res) => {
         mensagem: "Produto cadastrado com sucesso!",
         produto: produto
     });
-    
+
 })
 
 app.put('/produtos/:id', (req, res) => {
@@ -134,7 +130,7 @@ app.delete('/produtos/:id', (req, res) => {
 
 
     if (index != -1) {
-       
+
         produtos.splice(index, 1)
         res.status(200).json({
             mensagem: "Produto deletado com sucesso!"
@@ -143,15 +139,101 @@ app.delete('/produtos/:id', (req, res) => {
         res.status(404).send("Produto não encontrado!")
     }
 })
+app.get('/login', (req, res) => {
+    res.send(usuarios)
+})
+
+function autenticar(req, res, next) {
+
+    const token = req.cookies.token;
+
+    if (!token) {
+        return res.status(401).json({
+            mensagem: "Não autenticado"
+        });
+    }
+
+    try {
+
+        const dados = jwt.verify(
+            token,
+            JWT_SECRET
+        );
+
+        req.usuario = dados;
+
+        next();
+
+    } catch (erro) {
+
+        return res.status(401).json({
+            mensagem: "Token inválido ou expirado"
+        });
+    }
+}
+
+app.post("/login", (req, res) => {
+
+    const { login, senha } = req.body;
+
+    const usuario = usuarios.find(
+        u => u.login === login && u.senha === senha
+    );
+
+    if (!usuario) {
+        return res.status(401).json({
+            mensagem: "Login ou senha inválidos"
+        });
+    }
+
+    const token = jwt.sign(
+        {
+            id: usuario.id,
+            nome: usuario.nome,
+            login: usuario.login
+        },
+        JWT_SECRET,
+        {
+            expiresIn: "30m"
+        }
+    );
+
+    res.cookie("token", token, {
+        httpOnly: true,
+        sameSite: "strict",
+        secure: false,
+        maxAge: 30 * 60 * 1000
+
+    });
+
+    res.status(200).json({
+        mensagem: "Login realizado com sucesso"
+    });
+});
+
+app.get("/usuario", autenticar, (req, res) => {
+
+    res.json({
+        id: req.usuario.id,
+        nome: req.usuario.nome,
+        login: req.usuario.login
+    });
+
+});
+
+app.post("/logout", (req, res) => {
+
+    res.clearCookie("usuario");
+    res.clearCookie("token");
+
+    res.json({
+        mensagem: "Logout realizado"
+    });
+});
 
 app.listen(3000, (e) => {
     console.log('Servidor ouvindo em http://localhost:3000')
 })
-
-app.get('/login', (req, res) => {
-    res.send(login)
-})
-
 /* 
 
 app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
