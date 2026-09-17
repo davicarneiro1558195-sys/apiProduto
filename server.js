@@ -223,7 +223,6 @@ app.get("/usuario", autenticar, (req, res) => {
 
 app.post("/logout", (req, res) => {
 
-    res.clearCookie("usuario");
     res.clearCookie("token");
 
     res.json({
