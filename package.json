@@ -1,7 +1,28 @@
 {
   "dependencies": {
     "cookie-parser": "^1.4.7",
-    "express": "^5.2.1",
+    "express": "^5.3.0",
     "jsonwebtoken": "^9.0.3"
-  }
+  },
+  "name": "apiproduto",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davicarneiro1558195-sys/apiProduto.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/davicarneiro1558195-sys/apiProduto/issues"
+  },
+  "homepage": "https://github.com/davicarneiro1558195-sys/apiProduto#readme"
 }
